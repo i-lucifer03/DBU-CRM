@@ -1,170 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DBU Master Data Management</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Desh Bhagat University - Master Data Management System">
+  <title>DBU Master Data Management</title>
 
-    <!-- ===== STYLES ===== -->
-    <link rel="stylesheet" href="style/main.css" />
-    <link rel="stylesheet" href="style/layout.css" />
-    <link rel="stylesheet" href="style/forms.css" />
-    <link rel="stylesheet" href="style/tables.css" />
-    <link rel="stylesheet" href="style/wizard.css" />
-    <link rel="stylesheet" href="style/components.css" />
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome 6 (Free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
 
-    <!-- Google Font (Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
-
-    <!-- Font Awesome 6 (free) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Inline critical styles to avoid FOUC while style.css loads -->
+  <style>
+    :root {
+      --sidebar-width: 280px;
+      --topbar-height: 60px;
+      --transition-speed: 0.3s;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: #f5f7fa;
+      overflow-x: hidden;
+    }
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    /* Sidebar offcanvas on mobile, static on lg+ */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: #1e293b;
+      color: #fff;
+      transition: transform var(--transition-speed) ease;
+      z-index: 1040;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+    }
+    .main-panel {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      transition: margin-left var(--transition-speed) ease;
+    }
+    .topbar {
+      height: var(--topbar-height);
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,.05);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1020;
+    }
+    .content-area {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    /* Mobile: sidebar hidden by default, toggled with offcanvas mechanism */
+    @media (max-width: 991.98px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+      }
+      .sidebar.show {
+        transform: translateX(0);
+      }
+      .main-panel {
+        margin-left: 0;
+      }
+      .topbar {
+        padding: 0 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-
-    <!-- ===== APP SHELL ===== -->
-    <div id="app" class="app-shell">
-
-        <!-- ===== SIDEBAR ===== -->
-        <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-            <div class="sidebar-brand">
-                <div class="brand-icon">
-                    <i class="fas fa-university"></i>
-                </div>
-                <span class="brand-name">DBU <span class="brand-light">MDM</span></span>
-            </div>
-
-            <nav class="sidebar-nav">
-                <ul>
-                    <li>
-                        <a href="#dashboard" class="nav-link active" data-view="dashboard">
-                            <i class="fas fa-th-large"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#programs" class="nav-link" data-view="programs">
-                            <i class="fas fa-graduation-cap"></i>
-                            <span>Programs</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#fees" class="nav-link" data-view="fees">
-                            <i class="fas fa-coins"></i>
-                            <span>Fee Manager</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#approvals" class="nav-link" data-view="approvals">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Approvals</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#international" class="nav-link" data-view="international">
-                            <i class="fas fa-globe-americas"></i>
-                            <span>International</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#reports" class="nav-link" data-view="reports">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Reports</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#settings" class="nav-link" data-view="settings">
-                            <i class="fas fa-cog"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="sidebar-user">
-                    <div class="user-avatar">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    <div class="user-info">
-                        <span class="user-name">Counsellor</span>
-                        <span class="user-role">Admissions</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- ===== MAIN CONTENT ===== -->
-        <div class="main-wrapper">
-
-            <!-- ===== HEADER ===== -->
-            <header class="app-header" id="appHeader">
-                <div class="header-left">
-                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
-                </div>
-
-                <div class="header-right">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="globalSearch" placeholder="Search programs, faculty, country..." aria-label="Global search" />
-                    </div>
-
-                    <button class="header-btn" id="notifBtn" aria-label="Notifications">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
-                    </button>
-
-                    <button class="header-btn" id="darkModeToggle" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon"></i>
-                    </button>
-
-                    <div class="header-user">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                </div>
-            </header>
-
-            <!-- ===== VIEWPORT ===== -->
-            <main class="app-main" id="appMain">
-                <!-- Views are rendered here dynamically -->
-                <div id="viewContainer"></div>
-            </main>
-
-        </div>
+  <!-- ========== SIDEBAR (Offcanvas on mobile, fixed on desktop) ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-3 border-bottom border-secondary">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-university fa-lg me-2"></i>
+        <span class="fw-bold fs-5">DBU MDM</span>
+      </div>
+      <button class="btn btn-sm btn-outline-light d-lg-none" id="closeSidebarBtn" type="button">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
+    <nav class="sidebar-nav px-2 py-3">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link text-white active" href="#" data-page="dashboard">
+            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="programs">
+            <i class="fas fa-book-open me-2"></i> Programs
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="fee-structure">
+            <i class="fas fa-money-bill-wave me-2"></i> Fee Structure
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="scholarships">
+            <i class="fas fa-graduation-cap me-2"></i> Scholarships
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="eligibility">
+            <i class="fas fa-check-circle me-2"></i> Eligibility
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="hostel">
+            <i class="fas fa-building me-2"></i> Hostel
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="international">
+            <i class="fas fa-globe me-2"></i> International
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="users">
+            <i class="fas fa-users me-2"></i> Users
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="reports">
+            <i class="fas fa-chart-pie me-2"></i> Reports
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-page="settings">
+            <i class="fas fa-cog me-2"></i> Settings
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer px-3 py-2 border-top border-secondary mt-auto">
+      <small class="text-light opacity-75">© 2026 Desh Bhagat University</small>
+    </div>
+  </aside>
 
-    <!-- ===== TOAST CONTAINER ===== -->
-    <div id="toastContainer" class="toast-container"></div>
+  <!-- Overlay for mobile sidebar -->
+  <div class="sidebar-overlay d-lg-none" id="sidebarOverlay"></div>
 
-    <!-- ===== MODAL CONTAINER ===== -->
-    <div id="modalContainer" class="modal-container"></div>
+  <!-- ========== MAIN PANEL ========== -->
+  <div class="main-panel" id="mainPanel">
+    <!-- Top Navbar -->
+    <header class="topbar">
+      <button class="btn btn-outline-secondary me-3 d-lg-none" id="sidebarToggleBtn" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="d-flex align-items-center flex-grow-1">
+        <div class="input-group search-box me-auto" style="max-width: 400px;">
+          <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+          <input type="text" class="form-control border-start-0 ps-0" placeholder="Search programs, faculty, country..." id="globalSearch">
+        </div>
+      </div>
+      <div class="d-flex align-items-center ms-auto">
+        <!-- Dark Mode Toggle -->
+        <div class="form-check form-switch me-3 mb-0">
+          <input class="form-check-input" type="checkbox" id="darkModeToggle">
+          <label class="form-check-label" for="darkModeToggle"><i class="fas fa-moon"></i></label>
+        </div>
+        <!-- Notifications -->
+        <button class="btn btn-link text-dark position-relative me-3" title="Notifications">
+          <i class="fas fa-bell fa-lg"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+        </button>
+        <!-- Profile -->
+        <div class="dropdown">
+          <button class="btn btn-link text-dark dropdown-toggle d-flex align-items-center text-decoration-none" type="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle fa-2x me-2"></i>
+            <span class="d-none d-md-inline fw-semibold">Admin User</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Account Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
 
-    <!-- ===== JAVASCRIPT ===== -->
-    <script type="importmap">
-        {
-            "imports": {
-                "/js/app.js": "./js/app.js",
-                "/js/dashboard.js": "./js/dashboard.js",
-                "/js/wizard.js": "./js/wizard.js",
-                "/js/programs.js": "./js/programs.js",
-                "/js/validation.js": "./js/validation.js",
-                "/js/helpers.js": "./js/helpers.js",
-                "/js/storage.js": "./js/storage.js",
-                "/js/google.js": "./js/google.js",
-                "/js/reports.js": "./js/reports.js",
-                "/js/fees.js": "./js/fees.js",
-                "/js/international.js": "./js/international.js",
-                "/js/phd.js": "./js/phd.js",
-                "/js/bihar.js": "./js/bihar.js"
-            }
-        }
-    </script>
+    <!-- Dynamic Content Area -->
+    <main class="content-area" id="appContent">
+      <!-- Dashboard placeholder (will be rendered by form.js) -->
+      <div id="dashboardView" class="fade-in">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="fw-bold"><i class="fas fa-tachometer-alt me-2 text-primary"></i>Dashboard</h2>
+          <div>
+            <button class="btn btn-primary" id="addProgramBtn">
+              <i class="fas fa-plus me-1"></i> Add New Program
+            </button>
+          </div>
+        </div>
+        <!-- Dashboard cards (dynamically generated) -->
+        <div class="row g-4" id="dashboardCards">
+          <!-- JS will populate cards here -->
+        </div>
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header bg-white">
+                <h5 class="mb-0">Recent Programs</h5>
+              </div>
+              <div class="card-body" id="recentProgramsTable">
+                <p class="text-muted">Loading...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 
-    <script type="module" src="js/app.js"></script>
+  <!-- ========== MULTI-STEP PROGRAM WIZARD MODAL ========== -->
+  <div class="modal fade" id="programWizardModal" tabindex="-1" aria-labelledby="wizardModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="wizardModalLabel">
+            <i class="fas fa-magic me-2"></i>Program Entry Wizard
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Progress Bar -->
+          <div class="progress mb-4" style="height: 6px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" id="wizardProgressBar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <!-- Step Indicators -->
+          <ul class="nav nav-pills mb-4 flex-nowrap overflow-auto" id="wizardTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#step1" type="button">1. Program Details</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step2" type="button">2. Variants</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step3" type="button">3. Eligibility</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step4" type="button">4. Fee Structure</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step5" type="button">5. Scholarships</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step6" type="button">6. International</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step7" type="button">7. Career</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step8" type="button">8. Documents</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#step9" type="button">9. Review</button>
+            </li>
+          </ul>
+          <!-- Tab panes (dynamic content loaded by form.js) -->
+          <div class="tab-content" id="wizardTabContent">
+            <div class="tab-pane fade show active" id="step1" role="tabpanel">
+              <div class="step-content-placeholder text-center py-5 text-muted">
+                <i class="fas fa-spinner fa-pulse fa-3x mb-3"></i>
+                <p>Loading program details form...</p>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="step2" role="tabpanel"><div class="step-content-placeholder py-5 text-center text-muted">Variants form will appear here.</div></div>
+            <div class="tab-pane fade" id="step3" role="tabpanel"><div class="step-content-placeholder py-5 text-center text-muted">Eligibility form will appear here.</div></div>
+            <div class="tab-pane fade" id="step4" role="tabpanel"><div class="step-content-placeholder py-5 text-center text-muted">Fee structure form will appear here.</div></div>
+            <div class="tab-pane fade" id="step5" role="tabpanel"><div class="step-content-placeholder py-5 text-center text-muted">Scholarships form will appear here.</div></div>
+            <div class="tab-pane fade" id="step6" role="tabpanel"><div class="step-content-placeholder py-5 text-center text-muted">International fees form will appear here.</div></div>
+            <div class="tab-pane fade" id="step7" role="tabpanel"><div class="step-content-placeholder py-5 text-center text-muted">Career pathways form will appear here.</div></div>
+            <div class="tab-pane fade" id="step8" role="tabpanel"><div class="step-content-placeholder py-5 text-center text-muted">Documents form will appear here.</div></div>
+            <div class="tab-pane fade" id="step9" role="tabpanel">
+              <div id="reviewSummary" class="py-3">
+                <p class="text-muted text-center">Complete previous steps to review.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <div>
+            <button type="button" class="btn btn-outline-secondary" id="wizardPrevBtn" disabled>
+              <i class="fas fa-chevron-left me-1"></i> Previous
+            </button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-primary" id="wizardSaveDraftBtn">
+              <i class="fas fa-save me-1"></i> Save Draft
+            </button>
+            <button type="button" class="btn btn-primary" id="wizardNextBtn">
+              Next <i class="fas fa-chevron-right ms-1"></i>
+            </button>
+            <button type="button" class="btn btn-success d-none" id="wizardSubmitBtn">
+              <i class="fas fa-check-circle me-1"></i> Submit Program
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- ========== SCRIPTS ========== -->
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JavaScript (order matters) -->
+  <script src="api.js"></script>
+  <script src="validation.js"></script>
+  <script src="dynamic.js"></script>
+  <script src="form.js"></script>
 </body>
 </html>
